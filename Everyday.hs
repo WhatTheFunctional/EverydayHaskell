@@ -25,18 +25,16 @@ printRecord (name, menuItem, rewardPoints) = putStr "Customer: " >>
                                              print rewardPoints >>
                                              putStr "\n"
 
-printRecordFileName :: [String] -> IO ()
-printRecordFileName args = putStr "Record file: " >>
-                           putStrLn (head args)
+printRecordFileName :: Either String String -> IO ()
+printRecordFileName (Left err) = putStrLn err
+printRecordFileName (Right fileName) = putStr "Record file: " >>
+                                       putStrLn fileName
 
-printRecordFileContents :: String -> IO ()
-printRecordFileContents filePath
-    = withFile filePath ReadMode (\handle ->
-          hGetContents handle >>= (\contents ->
-          putStrLn contents))
+getFileName :: [String] -> Either String String
+getFileName [] = Left "Failed to read file name."
+getFileName (fileName : args) = Right fileName
 
 main = getArgs >>= (\args ->
-       printRecordFileName args >>
-       printRecordFileContents (head args) >>
+       printRecordFileName (getFileName args) >>
        generateRecord >>=
        printRecord)
