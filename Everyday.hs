@@ -12,8 +12,8 @@ orderType menuItem
     | menuItem == "Pakora" || menuItem == "Mini samosas" = putStr "Starter ordered"
     | otherwise = return ()
 
-isVIP :: Int -> IO ()
-isVIP rewardPoints
+printIsVIP :: Int -> IO ()
+printIsVIP rewardPoints
     = if rewardPoints > 50
       then putStr "VIP member"
       else return ()
@@ -73,14 +73,14 @@ generateRecord = do putStr "Enter customer name:\n"
                     rewardPoints <- readLn
                     return (name, menuItem, rewardPoints)
 
-printRecord :: (String, String, Int) -> IO ()
-printRecord (name, menuItem, rewardPoints) = putStr "Customer: " >>
-                                             putStr name >>
-                                             putStr ", " >>
-                                             putStr menuItem >>
-                                             putStr ", " >>
-                                             print rewardPoints >>
-                                             putStr "\n"
+prettyPrintRecord :: (String, String, Int) -> IO ()
+prettyPrintRecord (name, menuItem, rewardPoints) = putStr "Customer: " >>
+                                                   putStr name >>
+                                                   putStr ", " >>
+                                                   putStr menuItem >>
+                                                   putStr ", " >>
+                                                   print rewardPoints >>
+                                                   putStr "\n"
 
 printRecordFileName :: Either String String -> IO ()
 printRecordFileName (Left err) = putStrLn err
@@ -94,4 +94,4 @@ getFileName (fileName : args) = Right fileName
 main = getArgs >>= (\args ->
        printRecordFileName (getFileName args) >>
        generateRecord >>=
-       printRecord)
+       prettyPrintRecord)
